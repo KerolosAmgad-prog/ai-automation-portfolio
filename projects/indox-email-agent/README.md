@@ -17,5 +17,5 @@ Tech Stack:
 • Gmail
 
 Architecture & ScreenShots:
-(projects/indox-email-agent/Architecture & ScreenShots/Inbox-Agent.png)
+(Architecture & ScreenShots/Inbox-Agent.png)
 
