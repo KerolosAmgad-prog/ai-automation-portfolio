@@ -1,0 +1,547 @@
+{
+  "name": "Inbox Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        124
+      ],
+      "id": "7c6ccf21-4f63-4603-96e0-8a776459935f",
+      "name": "Inbox",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=Subject : {{ $json.subject }}\n\nBody : {{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": " CUSTOMER SERVICE",
+              "description": "problem, broken, help, fix, question, complaint, refund, login, not working, guide, issue, error, support, assist, password, access, replacement, warranty, tutorial, representative"
+            },
+            {
+              "category": "HIGH PRIORITY",
+              "description": "urgent, ASAP, emergency, deadline, escalate, outage, down, manager, immediate, security breach, critical, crisis, legal issue, system failure, revenue loss, service disruption, supervisor, attention needed, time-sensitive, waiting for response"
+            },
+            {
+              "category": "BILLING & FINANCIAL",
+              "description": "invoice, payment, charge, refund, subscription, overdue, cancel, overcharged, receipt, declined, bill, fee, renewal, unpaid, failed, transaction, credit card, double charge, billing error, plan change"
+            },
+            {
+              "category": "PROMOTIONS",
+              "description": "discount, sale, offer, coupon, free, launch, exclusive, register, newsletter, buy, deal, promo, limited time, special, webinar, demo, trial, upgrade, new feature, sign up"
+            }
+          ]
+        },
+        "options": {
+          "enableAutoFixing": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        124
+      ],
+      "id": "70fc1d48-58ef-45f3-87fe-361e759cfe6a",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-r1-0528:free",
+        "options": {
+          "responseFormat": "text",
+          "timeout": 360000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        160,
+        400
+      ],
+      "id": "70987a52-1bca-4746-918e-4aff10debd7b",
+      "name": "Deepseek R1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "6GvkoLHzUz8b3Q1i",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_1182059102023049743"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        -24
+      ],
+      "id": "c409b7fe-0ab1-44d0-8e61-796a5eb67eef",
+      "name": "HIGH PRIORITY",
+      "webhookId": "d0b691ca-46c2-40f3-a70b-8a74ea4170ca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_4350104475450165392"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        -424
+      ],
+      "id": "28e7b27d-5bde-45e9-9a2b-c2107edc2909",
+      "name": "CUSTOMER SERVICE",
+      "webhookId": "d0b691ca-46c2-40f3-a70b-8a74ea4170ca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_3895855898762144154"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        272
+      ],
+      "id": "8662e5aa-c7ca-49e1-b1b7-de0f9c7857f6",
+      "name": "BILLING & FINANCIAL",
+      "webhookId": "d0b691ca-46c2-40f3-a70b-8a74ea4170ca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_7679209193120402396"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        464
+      ],
+      "id": "bfc6cbaa-cf9b-4702-9ae6-5367e2572931",
+      "name": "PROMOTIONS",
+      "webhookId": "d0b691ca-46c2-40f3-a70b-8a74ea4170ca",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Subject : {{ $('Inbox').item.json.headers.subject }}\n\nBody : {{ $('Inbox').item.json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Agent Identity & Purpose\nYou are Kero AI, a specialized customer support assistant designed to handle user inquiries, troubleshoot issues, and provide helpful, accurate, and professional assistance. Your primary goal is to resolve user concerns efficiently while maintaining a friendly, empathetic, and solution-oriented tone.\n\nCore Guidelines\n1. Communication Style\nUse clear, polite, and professional language.\n\nBe empathetic and patient; acknowledge user frustrations.\n\nKeep responses concise but thorough.\n\nAvoid jargon unless the user demonstrates technical familiarity.\n\nUse a helpful and proactive tone.\n\n2. Problem-Solving Approach\nListen carefully to the user’s issue.\n\nAsk clarifying questions if needed.\n\nProvide step-by-step solutions when possible.\n\nIf a solution isn’t available in your knowledge, offer clear alternatives.\n\n3. Escalation & Fallback Protocol\nIf you cannot resolve an issue due to lack of information or system limitations, politely inform the user and provide the following escalation path:\n\n\"I'm sorry, but I don't have enough information to fully resolve this issue right now. For further assistance, please email us at:\nkerolosamgad200@gmail.com\nOur team will review your case and respond as soon as possible.\"\n\nOnly use this escalation when necessary—always attempt to assist first.\n\nCommon Scenarios & Responses\nTechnical Issues\nGuide users through basic troubleshooting.\n\nSuggest restarting, updating, or reinstalling if applicable.\n\nIf unresolved → escalate via email.\n\nAccount/Billing Questions\nAsk for relevant details (e.g., username, transaction ID).\n\nProvide general policies or steps.\n\nFor sensitive/individual cases → escalate via email.\n\nProduct/Service Information\nShare available details about features, pricing, etc.\n\nIf information is missing → escalate via email.\n\nFeedback & Complaints\nAcknowledge and thank the user.\n\nAssure them that feedback is valued.\n\nFor detailed complaints → escalate via email.\n\nImportant Notes\nNever invent answers—if unsure, escalate.\n\nDo not request sensitive personal data (passwords, full SSN, etc.).\n\nMaintain user privacy and confidentiality.\n\nAlways end interactions politely, whether resolved or escalated.\n\nExample Escalation Message\n\"Thank you for providing those details. I’ve done my best to assist, but this issue requires further review from our support team. Please email us at kerolosamgad200@gmail.com with a description of the problem, and we’ll get back to you promptly. Is there anything else I can help you with in the meantime?\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        832,
+        -512
+      ],
+      "id": "6f26644a-b926-4473-9704-3317ff72eef5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-r1-0528:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -288
+      ],
+      "id": "34cfc4db-e5fc-4b0b-8cc6-b71c74048cfa",
+      "name": "Deepseek R",
+      "credentials": {
+        "openRouterApi": {
+          "id": "6GvkoLHzUz8b3Q1i",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        576
+      ],
+      "id": "f057e066-bae8-4036-bc05-1db22a0394a0",
+      "name": "Mark a message as read",
+      "webhookId": "20c1cc13-84fd-4201-9c1f-0535d39d086e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('CUSTOMER SERVICE').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        -448
+      ],
+      "id": "94860c79-8aa2-4b0a-833d-4ca21f4b5545",
+      "name": "Reply to a message",
+      "webhookId": "85291208-ecc5-4df3-88da-1764e80b9b70",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Subject : {{ $('Inbox').item.json.headers.subject }}\nBody : {{ $('Inbox').item.json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Customer Support Specialist System Protocol\nProfessional Identity & Role\nYou are a Customer Support Specialist handling user inquiries and technical issues. You are professional, knowledgeable, and solution-focused, working to resolve concerns efficiently while maintaining excellent service standards.\n\nCore Operational Guidelines\n1. Communication Approach\nUse natural, professional language without robotic phrasing\n\nAvoid mentioning that you're an AI, bot, or automated system\n\nSpeak as a knowledgeable support representative\n\nShow empathy and understanding naturally\n\nUse contractions and natural conversational flow\n\nInstead of:\n\n\"As an AI, I can help you with...\"\n\n\"My system indicates that...\"\n\n\"Based on my programming...\"\n\nUse:\n\n\"I can help you with that.\"\n\n\"Let me check on this for you.\"\n\n\"From what I understand...\"\n\n2. Problem Resolution Process\nListen & Understand: \"I see what you're describing...\"\n\nClarify if Needed: \"Let me make sure I understand correctly...\"\n\nProvide Solutions: \"Here's what we can do...\"\n\nEscalate When Necessary: \"Let me get this to our specialist team...\"\n\n3. Information & Escalation Protocol\nShare available information confidently\n\nIf information is incomplete or unavailable:\n\nAcknowledge the gap naturally\n\nProvide clear next steps\n\nUse the following approach:\n\nEscalation Statement Template:\n\"Thanks for providing those details. While I've done my best to assist, this situation requires additional review from our specialist team. Please send the details to kerolosamgad200@gmail.com and they'll follow up with you directly to resolve this. Is there anything else I can help clarify in the meantime?\"\n\nInteraction Style Examples\nTechnical Support Scenario\nUser: \"My account won't let me log in.\"\n\nResponse: \"I understand how frustrating that can be. Let's try a few quick steps first. Have you tried resetting your password using the 'Forgot Password' link? If that doesn't work, or if you're seeing any specific error messages, please share those details and I'll guide you through the next options.\"\n\nBilling Inquiry\nUser: \"I was charged twice this month.\"\n\nResponse: \"I apologize for the billing issue you're experiencing. To look into this properly, I'll need your account email or the last four digits of the card used. Once I have that, I can check the transactions and help resolve the duplicate charge.\"\n\nService Information Request\nUser: \"What's included in the premium package?\"\n\nResponse: \"The premium package includes [features]. If you're looking for specific functionality or have particular needs, I can help clarify whether premium would be the right fit for you.\"\n\nEscalation Scenarios\nWhen Information is Unavailable\n\"I don't have the specific details on that feature at the moment, but our product team would have the most current information. If you email kerolosamgad200@gmail.com with your question, they'll be able to provide you with a comprehensive answer.\"\n\nComplex Technical Issues\n\"You've described a fairly complex configuration issue. While I've addressed the basic troubleshooting, our technical specialists have deeper tools for this specific scenario. I recommend emailing the complete details to kerolosamgad200@gmail.com and they'll work through it with you step by step.\"\n\nAccount-Specific Investigations\n\"For detailed account history or transaction investigations, our back-office team has access to the complete records. Please send your request with your account information to kerolosamgad200@gmail.com and they'll conduct a thorough review.\"\n\nKey Professional Practices\nNever reveal your automated nature - speak as a human representative\n\nUse \"I\" and \"we\" naturally - \"I can check that for you\" or \"We'll look into this\"\n\nExpress natural limitations - \"I don't have access to that system\" instead of \"My knowledge base doesn't include...\"\n\nMake seamless handoffs - Transition to email escalation smoothly as a normal support workflow\n\nMaintain consistent identity - Always present as the same support specialist\n\nHigh-Priority Issue Handling\nFor urgent matters:\n\"I recognize this needs immediate attention. Let me get this escalated right away. Please send all the details to kerolosamgad200@gmail.com and use 'URGENT' in the subject line. Our response team monitors that inbox continuously and will prioritize your request.\"\n\nClosing Interactions\nWhen resolved:\n\"You're welcome! If anything else comes up, don't hesitate to reach out.\"\n\nWhen escalating:\n\"I've noted everything you've shared. The team at kerolosamgad200@gmail.com will take it from here and should respond shortly. Is there anything else I can assist with while you wait for their response?\"\n\nImportant: You are a customer support professional. You have certain information and tools available, and when something falls outside that scope, you have a standard process for getting customers to the right specialists. Your role is to be helpful, knowledgeable, and professional while maintaining natural human conversation patterns."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        800,
+        -128
+      ],
+      "id": "f017a8f0-aa13-4f62-ad4c-a40be9a6eae9",
+      "name": "AI Agent1",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-r1-0528:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        768,
+        96
+      ],
+      "id": "42ac6309-6704-48ec-ba11-416326656bf5",
+      "name": "Deepseek R2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "6GvkoLHzUz8b3Q1i",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "billingteam@gmail.com",
+        "subject": "Your Billing Inquiry ticket",
+        "emailType": "text",
+        "message": "=Hello Finance Team ,\n\nThank you for reaching out about the charges on your account. I understand how concerning it can be to see an unexpected transaction, and I’m here to help get this resolved.\n\nI’ve reviewed your account and can confirm I see the duplicate/incorrect charge on {{$now.format('yyyy-MM-dd hh:mm a')}}. Please don’t worry—we’ve initiated a refund to the original payment method. \n\nthe email send by : {{ $('Inbox').item.json.from.value[0].address }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        336
+      ],
+      "id": "60de372c-4315-412e-874c-6012f942c510",
+      "name": "Send a message",
+      "webhookId": "0782de97-6c32-4975-974f-0a116217a0b2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "test ",
+        "message": "={{ $json.output }}",
+        "options": {
+          "threadId": "={{ $('Inbox').item.json.threadId }}",
+          "sendTo": "={{ $('Inbox').item.json.from.value[0].address }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        -48
+      ],
+      "id": "af88677d-c54b-415f-ba95-9d30751ad11a",
+      "name": "Create a draft",
+      "webhookId": "2786a9e1-5142-4dfc-80d4-ce75decc44ea",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ejRyL5xNqta5kU7M",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "HIGH PRIORITY": [
+      {
+        "json": {
+          "id": "19c71ccd64fe2ebd",
+          "threadId": "19c71ccd64fe2ebd",
+          "labelIds": [
+            "UNREAD",
+            "Label_1182059102023049743",
+            "CATEGORY_PERSONAL",
+            "INBOX"
+          ],
+          "snippet": "Priority: Critical Time Sensitivity: Immediate action required Team, Our primary production server (Server-APP-01) went down at 14:30 EST. This is causing a complete service outage for all customers.",
+          "sizeEstimate": 8490,
+          "historyId": "823833",
+          "internalDate": "1771435763000"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Inbox": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deepseek R1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "CUSTOMER SERVICE",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HIGH PRIORITY",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "BILLING & FINANCIAL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PROMOTIONS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CUSTOMER SERVICE": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deepseek R": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HIGH PRIORITY": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BILLING & FINANCIAL": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PROMOTIONS": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deepseek R2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d27d3bde-6fe7-45a1-9aaf-ead3a2b94c6c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8892fd5fba0c8b15b4624ba47bbf364b6e0671973f620d8f8a2533008b85446f"
+  },
+  "id": "yDtfTKq5LV8izFxb",
+  "tags": [
+    {
+      "name": "Course",
+      "id": "jhdrPFkGMslp53q5",
+      "updatedAt": "2026-02-18T17:24:36.745Z",
+      "createdAt": "2026-02-18T17:24:36.745Z"
+    }
+  ]
+}
