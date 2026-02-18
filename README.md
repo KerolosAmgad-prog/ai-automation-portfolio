@@ -2,12 +2,13 @@
 
 This repository contains my AI automation projects built using n8n, LLMs, and automation tools.
 
-Projects:
+## Projects:
 
 ## 1. Indox Email Agent
 Automated AI email processing system.
 
 Location:
+
 projects/indox-email-agent
 
 
@@ -20,4 +21,5 @@ Tech Stack:
 • Playwright
 
 Author:
+
 Kerolos Amgad
