@@ -17,5 +17,5 @@ Tech Stack:
 • Gmail
 
 Architecture & ScreenShots:
-(Architecture & ScreenShots/Inbox-Agent.png)
+![Architecture] (Architecture & ScreenShots/Inbox-Agent.png)
 
