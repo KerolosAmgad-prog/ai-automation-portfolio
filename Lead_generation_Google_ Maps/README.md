@@ -43,3 +43,5 @@ To run this workflow, you will need:
 ## ⚠️ Important Note
 
 Please ensure you comply with Google Maps' Terms of Service and Apify's usage policies when scraping data.
+
+![image alt](Lead_generation_Google_ Maps/Architecture & ScreenShots/leads generation google maps workflow.png)
