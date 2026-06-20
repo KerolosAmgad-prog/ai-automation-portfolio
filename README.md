@@ -20,6 +20,18 @@ Tech Stack:
   • Python
   • Playwright
 
+## 2. Lead Generatoin Google Maps 
+Automated Scraping a Google Maps Location of ICP and Append them at Google Sheet with the feedback on Email
+
+location : https://github.com/KerolosAmgad-prog/ai-automation-portfolio/tree/main/Lead_generation_Google_%20Maps
+
+Tech Stack : 
+  • n8n
+  • Docker
+  • Apify
+  • Python
+  • Intergations
+  
 Author:
 
 Kerolos Amgad
