@@ -1,0 +1,460 @@
+{
+  "name": "Leads Generation Google Maps",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Google Maps Leads Generation ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Business Type"
+            },
+            {
+              "fieldLabel": "City"
+            },
+            {
+              "fieldLabel": "Country"
+            },
+            {
+              "fieldLabel": "Max Results",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -528,
+        -160
+      ],
+      "id": "f89265df-875f-416c-9d36-4bb60965a139",
+      "name": "On form submission",
+      "webhookId": "9d9e8f84-95c2-4eef-908b-d9b7be3b882e"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e3d99b05-7e0d-4c1a-a0a2-2d79efef8a35",
+              "leftValue": "={{ $json['Business Type'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ed282df6-8990-4d3d-a878-b0990a4d0302",
+              "leftValue": "={{ $json.City }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "d59bec17-818a-41e3-bfbd-96da6775a587",
+              "leftValue": "={{ $json.Country }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e3065b8a-fdc4-4d8d-902f-3381a7f022ff",
+              "leftValue": "={{ $json['Max Results'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -336,
+        -160
+      ],
+      "id": "3ab9d251-1f8f-402f-86ba-9c93e4322b18",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6d004d63-60fa-4dbe-ad63-1861c954eff4",
+              "name": "searchQuery",
+              "value": "={{ $json[\"Business Type\"] +\" \" +\"in\" +\" \"+ $json.City +\",\" +$json.Country}}",
+              "type": "string"
+            },
+            {
+              "id": "2715da6e-dd72-4b9c-8125-33aa584ae102",
+              "name": "locationQuery",
+              "value": "={{ $json.City + \",\" +  $json.Country }}",
+              "type": "string"
+            },
+            {
+              "id": "26938f7d-84cf-42f3-81e9-4bc46be354eb",
+              "name": "searchStrings",
+              "value": "={{ $json[\"Business Type\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        -240
+      ],
+      "id": "b5dc7d5b-1d50-4788-a7b9-dc05059d0f84",
+      "name": "Query"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apify.com/v2/actors/compass~crawler-google-places/run-sync-get-dataset-items?token=YOUR_APIFY_API_KEY",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"includeWebResults\": false,\n    \"language\": \"ar\",\n    \"locationQuery\": \"{{ $json.locationQuery }}\" ,\n    \"maxCrawledPlacesPerSearch\": {{ $('On form submission').item.json['Max Results'] }},\n    \"maximumLeadsEnrichmentRecords\": 0,\n    \"scrapeContacts\": false,\n    \"scrapeDirectories\": false,\n    \"scrapeImageAuthors\": false,\n    \"scrapeOrderOnline\": false,\n    \"scrapePlaceDetailPage\": false,\n    \"scrapeReviewsPersonalData\": true,\n    \"scrapeSocialMediaProfiles\": {\n        \"facebooks\": false,\n        \"instagrams\": false,\n        \"tiktoks\": false,\n        \"twitters\": false,\n        \"youtubes\": false\n    },\n    \"scrapeTableReservationProvider\": false,\n    \"searchStringsArray\": [\n        \"{{ $json.searchStrings }}\"\n    ],\n    \"skipClosedPlaces\": false,\n    \"verifyLeadsEnrichmentEmails\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        176,
+        -240
+      ],
+      "id": "472c1843-3aa6-44e2-991b-f5ab21c6ef0a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "content": "https://api.apify.com/v2/actors/compass~crawler-google-places/run-sync-get-dataset-items?token=YOUR_APIFY_API_KEY",
+        "width": 480
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1776,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "6fe0d05e-bdfc-493a-bf2f-d893f0e55e40",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "CRM Leads generation ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name ": "={{ $json.title }}",
+            "Category Name": "={{ $json.categoryName }}",
+            "address": "={{ $json.address }}",
+            "city": "={{ $json.city }}",
+            "website": "={{ $json.website }}",
+            "phone number": "={{ $json.phone }}",
+            "total score": "={{ $json.totalScore }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category Name",
+              "displayName": "Category Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "website",
+              "displayName": "website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone number",
+              "displayName": "phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total score",
+              "displayName": "total score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        -176
+      ],
+      "id": "f4d038d3-6370-4b3c-a281-09b5fa2b100c",
+      "name": "CRM google Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SbxNxBaTuM7mszft",
+          "name": "Leads generation API 1/6/2026"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        384,
+        -240
+      ],
+      "id": "be13281b-95fd-4509-85d0-aae3aa4af727",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "sendTo": "YOUR_EMAIL@gmail.com",
+        "subject": "Lead generation",
+        "message": "Successfully append to CRM",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        -320
+      ],
+      "id": "32450856-051d-411f-8db6-065f141ccca8",
+      "name": "Feedback",
+      "webhookId": "7052083f-9d45-470d-acbf-965cad0cf42f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Md8ZcWVOsiH1hZpB",
+          "name": "Feedback Email"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "empty"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        608,
+        -320
+      ],
+      "id": "3bb81a07-cee0-4146-bc53-eb5a1d5eb292",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Please Enter the City and country again"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -48
+      ],
+      "id": "45894dab-4159-4e13-abfe-9afbd2418c1a",
+      "name": "error Message"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "CRM google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback": {
+      "main": [
+        []
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "b057cfa0-a96f-4241-b10f-35a4ccf2409b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "550ca0ec02cb5a156cfa4289e2e647eb9f35abc4d2516f8b9d3bc963dffc250b"
+  },
+  "id": "mb8y9qmZOGuV6WPA",
+  "tags": []
+}
