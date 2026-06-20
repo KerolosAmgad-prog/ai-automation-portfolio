@@ -44,4 +44,4 @@ To run this workflow, you will need:
 
 Please ensure you comply with Google Maps' Terms of Service and Apify's usage policies when scraping data.
 
-![image alt](Lead_generation_Google_ Maps/Architecture & ScreenShots/leads generation google maps workflow.png)
+![image alt](https://github.com/KerolosAmgad-prog/ai-automation-portfolio/blob/main/Lead_generation_Google_%20Maps/Architecture%20%26%20ScreenShots/leads%20generation%20google%20maps%20workflow.png)
